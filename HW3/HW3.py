@@ -16,26 +16,39 @@ def delete_files():
         os.remove(f)
 
 def z(X,w,b):
-    z=X.dot(w) - b
+
+    z=X.dot(w) + b
     exp=np.exp(z)/np.sum(np.exp(z),axis=1).reshape(-1,1)
     return exp
 
 # Softmax layer to choose the larget bit as predicting class
-def softmax(yhat):
+def argmax(yhat):
     return np.argmax(np.asarray(yhat),axis=1)
+
+# def cost(X,y,w,b,alpha):
+#     w=np.asarray(w)
+#     yhat=np.log(z(X,w,b))
+#
+#     c=[]
+#     for i in range(X.shape[0]):
+#         c.append(yhat[i,int(y[i])])
+#     ce=-np.mean(c)+alpha/2*np.mean(w.dot(w.T))
+#     return ce
 
 def cost(X,y,w,b,alpha):
     w=np.asarray(w)
-    yhat=np.log(z(X,w,b))
+    yhat= np.exp(z(X,w,b)) / sum(np.exp(z(X,w,b)))
+    # yhat=np.log(argmax(yhat))
+
     c=[]
     for i in range(X.shape[0]):
-        c.append(yhat[i,int(y[i])])
+        c.append(np.log(yhat[i,int(y[i])]))
     ce=-np.mean(c)+alpha/2*np.mean(w.dot(w.T))
     return ce
 
 def initial_w_b(X,y):
     w=np.random.rand(X.shape[1],y.shape[1])
-    b=1
+    b=np.random.rand(1,y.shape[1])
     return w,b
 
 def update_weights(X,y,w,b,alpha,lr):
@@ -63,7 +76,6 @@ def train(data_tr,learning_rate,alpha,mini_batch,epoch):
     return w,b
 
 def split_data():
-
     X = np.reshape(np.load("fashion_mnist_train_images.npy"), (-1, 28 * 28)) / 255
     y = np.reshape(np.load("fashion_mnist_train_labels.npy"), (-1, 1))
     data = np.concatenate((X, y), axis=1)
@@ -125,7 +137,7 @@ def Softmax_LinearReression():
 def evaluation(w,b):
     X_te = np.reshape(np.load('fashion_mnist_test_images.npy'), (-1, 28 * 28)) / 255
     y_te = np.reshape(np.load('fashion_mnist_test_labels.npy'), (-1, 1))
-    y_pre=softmax(z(X_te,w,b)).reshape(-1,1)
+    y_pre=argmax(z(X_te,w,b)).reshape(-1,1)
 
     # Cross Enropy for validation set
     ce = cost(X_te, y_te, w, b, alp)
