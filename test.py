@@ -51,15 +51,18 @@ y=np.asarray([[1,2,3],[6,6,6],[2,2,2],[1,1,1]])
 # d=y.flatten()
 # c=np.vstack((c,d))
 # print(np.vstack((c,d)))
-c=[]
-c.append(x.flatten())
-c.append(x.flatten())
-c.append(x.flatten())
-c=np.asarray(c)
-print(c)
+# c=[]
+# c.append(x.flatten())
+# c.append(x.flatten())
+# c.append(x.flatten())
+# c=np.asarray(c)
+# print(c)
 
-a=np.asarray([-3.82232105, -6.25759225, -4.9874595,  -5.78260876, -3.91829208,8.01789327])
-def softmax (x):
-    pass
-    return np.exp(x)/np.sum(np.exp(x))
-print(np.argmax(softmax(a)))
+# a=np.asarray([-3.82232105, -6.25759225, -4.9874595,  -5.78260876, -3.91829208,8.01789327])
+# def softmax (x):
+#     pass
+#     return np.exp(x)/np.sum(np.exp(x))
+# print(np.argmax(softmax(a)))
+import tensorflow as tf 
+tf.test.is_built_with_cuda()
+tf.test.is_gpu_available(cuda_only=False, min_cuda_compute_capability=None)
