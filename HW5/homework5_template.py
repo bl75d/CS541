@@ -71,7 +71,8 @@ def part2_cnn():
     model.add(tf.keras.layers.Conv2D(filters=64, kernel_size=3, padding='valid', activation='relu',
                                      input_shape=(28, 28, 1)))
     model.add(tf.keras.layers.MaxPooling2D(pool_size=2, strides=2, padding='valid'))
-    model.add(tf.keras.layers.Dense(64, activation='relu'))
+    # model.add(layers.Activation(activation='relu'))
+    # model.add(tf.keras.layers.Dense(64, activation='relu'))
     model.add(tf.keras.layers.Flatten())
     model.add(tf.keras.layers.Dense(1024, activation='relu'))
     model.add(tf.keras.layers.Dense(10, activation='softmax'))
@@ -84,7 +85,7 @@ def part2_cnn():
     model.fit(x_train,
               y_train,
               batch_size=64,
-              epochs=10,
+              epochs=2,
               validation_data=(x_test, y_test))
 
     # Evaluate the model on test set
@@ -93,6 +94,7 @@ def part2_cnn():
     print('\n', 'Test accuracy:', score[1])
     model.summary()
     model.trainable_variables
+    model.save("cnn_model")
     return model
 
 def part2_prediction(x_train,model):
@@ -108,6 +110,9 @@ def part2_prediction(x_train,model):
 def convertWeights (model):
     # Extract W1, b1, W2, b2, W3, b3 from model.
     k=model.trainable_variables
+
+    for i in model.trainable_variables:
+        print(i.shape)
     W1, b1, W2, b2, W3, b3=k[0],k[1],k[2],k[3],k[4],k[5]
     return W1, b1, W2, b2, W3, b3
 
@@ -151,7 +156,7 @@ def maxPool (input, poolingWidth,stride):
 # Implement a softmax function.
 def softmax (x):
     pass
-    return np.exp(x)/np.sum(np.exp(x),axis=1).reshape(-1,1)
+    return np.exp(x)/np.sum(np.exp(x))
 
 # Implement a ReLU activation function
 def relu (x):
@@ -163,11 +168,6 @@ def relu (x):
 # Implement the CNN with the same architecture and weights
 # as the TensorFlow-trained model but using only numpy.
 
-
-# yhat2 = softmax(...)
-#
-# print(yhat1)
-# print(yhat2)
 def load_model():
     model=keras.models.load_model("cnn_model")
     return model
@@ -213,43 +213,53 @@ if __name__ == '__main__':
     W1, b1, W2, b2, W3, b3 = convertWeights(model)
     # print(W1[:,:,0,0].shape)
     x=x_test[0, :, :, :] #28*28*1
-
+    # #
     # conv2d layer
     tensor=conv2d(x,W1,b1)# (26, 26, 64)
+    print(tensor.shape)
 
     # maxpool layer
     tensor=maxPool(tensor,2,2)
-
+    print(tensor.shape)
     # relu layer
     tensor=relu(tensor)
-
-    # flatten layer
+    # print(tensor.shape)
+    #
+    #
+    # # # flatten layer
     tensor=tensor.flatten()
-
+    print(tensor.shape)
+    #
+    # #
     print("W2:***********")
     print(tensor.shape)
     print(W2.shape)
     print(b2.shape)
-
+    # #
     # fully connected layer1
     tensor=fullyConnected(np.asarray(W2),np.asarray(b2),tensor)
     tensor=relu(tensor)
     print(tensor.shape)
 
-    # print("W3:***********")
-    # print(tensor.shape)
-    # print(W2.shape)
-    # print(b2.shape)
+    print("W3:***********")
+    print(tensor.shape)
+    print(W2.shape)
+    print(b2.shape)
     #
     # # fully connected layer2
-    # tensor = fullyConnected(np.asarray(W3), np.asarray(b3), tensor)
-    # # print(tensor.shape)
-    #
-    # # softmax layer
-    # yhat1=softmax(tensor)
+    tensor = fullyConnected(np.asarray(W3), np.asarray(b3), tensor)
+    print(tensor.shape)
+
+    # softmax layer
+    yhat1=softmax(tensor)
     # yhat1=np.argmax(yhat1)
 
-    # print(y_test[0])
-    # yhat1=part2_prediction(x_test,model)
-    #
+    # fully connected model prediction
+    print("Fully connected NN prediciton:")
+    print(yhat1)
+
+    # tf model prediction
+    yhat2=part2_prediction(x_test,model)
+    print("TF CNN prediction:")
+    print(yhat2)
     # print(yhat1)

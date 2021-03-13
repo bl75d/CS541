@@ -57,3 +57,9 @@ c.append(x.flatten())
 c.append(x.flatten())
 c=np.asarray(c)
 print(c)
+
+a=np.asarray([-3.82232105, -6.25759225, -4.9874595,  -5.78260876, -3.91829208,8.01789327])
+def softmax (x):
+    pass
+    return np.exp(x)/np.sum(np.exp(x))
+print(np.argmax(softmax(a)))
