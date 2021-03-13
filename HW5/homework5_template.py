@@ -198,7 +198,11 @@ def conv2d(x,W1,b1):
 
 
 if __name__ == '__main__':
+
+    # Run the model=part2_cnn() function to get weights and biases files
     # model=part2_cnn()
+
+    # load the model to get the weights and biases
     model=load_model()
     print(model.summary())
     (x_train, y_train), (x_test, y_test) = tf.keras.datasets.fashion_mnist.load_data()
