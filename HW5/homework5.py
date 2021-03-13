@@ -85,7 +85,7 @@ def part2_cnn():
     model.fit(x_train,
               y_train,
               batch_size=64,
-              epochs=2,
+              epochs=10,
               validation_data=(x_test, y_test))
 
     # Evaluate the model on test set
@@ -200,10 +200,10 @@ def conv2d(x,W1,b1):
 if __name__ == '__main__':
 
     # Run the model=part2_cnn() function to get weights and biases files
-    # model=part2_cnn()
+    model=part2_cnn()
 
-    # load the model to get the weights and biases
-    model=load_model()
+    # load the model to get the weights and biases if 'cnn_model' file exists
+    # model=load_model()
     print(model.summary())
     (x_train, y_train), (x_test, y_test) = tf.keras.datasets.fashion_mnist.load_data()
     x_test = x_test / 255
@@ -213,42 +213,38 @@ if __name__ == '__main__':
     W1, b1, W2, b2, W3, b3 = convertWeights(model)
     # print(W1[:,:,0,0].shape)
     x=x_test[0, :, :, :] #28*28*1
-    # #
+
     # conv2d layer
     tensor=conv2d(x,W1,b1)# (26, 26, 64)
-    print(tensor.shape)
 
     # maxpool layer
     tensor=maxPool(tensor,2,2)
-    print(tensor.shape)
+
     # relu layer
     tensor=relu(tensor)
-    # print(tensor.shape)
-    #
-    #
-    # # # flatten layer
+
+    # flatten layer
     tensor=tensor.flatten()
-    print(tensor.shape)
-    #
-    # #
-    print("W2:***********")
-    print(tensor.shape)
-    print(W2.shape)
-    print(b2.shape)
-    # #
+
+
+    # print("W2:***********")
+    # print(tensor.shape)
+    # print(W2.shape)
+    # print(b2.shape)
+
     # fully connected layer1
     tensor=fullyConnected(np.asarray(W2),np.asarray(b2),tensor)
     tensor=relu(tensor)
-    print(tensor.shape)
 
-    print("W3:***********")
-    print(tensor.shape)
-    print(W2.shape)
-    print(b2.shape)
-    #
+
+    # print("W3:***********")
+    # print(tensor.shape)
+    # print(W2.shape)
+    # print(b2.shape)
+
     # # fully connected layer2
     tensor = fullyConnected(np.asarray(W3), np.asarray(b3), tensor)
-    print(tensor.shape)
+
 
     # softmax layer
     yhat1=softmax(tensor)
