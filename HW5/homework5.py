@@ -238,6 +238,7 @@ if __name__ == '__main__':
     yhat2=part2_prediction(x_test,model)
     print("TF CNN prediction:")
     print(yhat2)
+    
     # fully connected model prediction
     print("Fully connected NN prediciton:")
     print(yhat)
